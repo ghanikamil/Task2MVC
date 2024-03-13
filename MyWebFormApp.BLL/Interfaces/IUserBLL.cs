@@ -12,5 +12,6 @@ namespace MyWebFormApp.BLL.Interfaces
         void Insert(UserCreateDTO entity);
         UserDTO Login(string username, string password);
         UserDTO LoginMVC(LoginDTO loginDTO);
+        IEnumerable<UserDTO> GetAllWithRole();
     }
 }

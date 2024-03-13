@@ -45,6 +45,11 @@ namespace MyWebFormApp.BLL
             return usersDTO;
         }
 
+        public IEnumerable<UserDTO> GetAllWithRole()
+        {
+            throw new NotImplementedException();
+        }
+
         public UserDTO GetByUsername(string username)
         {
             throw new NotImplementedException();

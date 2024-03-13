@@ -1,4 +1,15 @@
-﻿@model SampleMVC.ViewModels.ArticlesByCategoryViewModel
+﻿@using System.Text.Json
+@model SampleMVC.ViewModels.ArticlesByCategoryViewModel
+@{
+    int pageNumber = 0;
+    if (ViewData["pageNumber"] != null)
+    {
+        pageNumber = Convert.ToInt32(ViewData["pageNumber"]);
+    }
+    var userDto = JsonSerializer.Deserialize<UserDTO>(Context.Session.GetString("user"));
+    ViewBag.Message = $"{userDto.FirstName} {userDto.LastName}";
+    var userRoles = userDto.Roles;
+}
 
 <div class="row">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -46,8 +57,24 @@
                                 <td>@article.Title</td>
                                 <td>@article.IsApproved</td>
                                 <td><img src="~/pics/@article.Pic" width="60" /></td>
-                                <td><a asp-action="Edit" asp-route-id="@article.CategoryID" class="btn btn-warning btn-sm">edit</a></td>
-                                <td><a asp-action="Delete" asp-route-id="@article.CategoryID" class="btn btn-danger btn-sm">delete</a></td>
+                                <td>
+                                    @foreach (var role in userRoles)
+                                    {
+                                        @if (role.RoleID == 2)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@article.CategoryID" class="btn btn-warning btn-sm">edit</a>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @foreach (var role in userRoles)
+                                    {
+                                        @if (role.RoleID == 2)
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@article.CategoryID" class="btn btn-danger btn-sm">delete</a>
+                                        }
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>

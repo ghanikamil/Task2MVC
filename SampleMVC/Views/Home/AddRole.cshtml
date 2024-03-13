@@ -1,0 +1,43 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Basic Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">add role</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddRole" method="post">
+                    <div class="form-group">
+                        <label for="roleID">select role</label>
+                        <select name="roleID" id="roleID" class="form-control">
+                            @foreach (var data in ViewBag.role)
+                            {
+                                <option value="@data.RoleID">@data.RoleName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">select user</label>
+                        <select name="username" id="username" class="form-control">
+                            @foreach (var data in ViewBag.user)
+                            {
+                                <option value="@data.Username">@data.Username</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">tambah role</button>
+                </form>
+                
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

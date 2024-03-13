@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWebFormApp.BLL.DTOs;
 using MyWebFormApp.BLL.Interfaces;
+using System.Text.Json;
 
 namespace SampleMVC.Controllers;
 
@@ -16,7 +17,7 @@ public class CategoriesController : Controller
     public IActionResult Index(int pageNumber = 1, int pageSize = 5, string search = "", string act = "")
     {
         //pengecekan session username
-        if (HttpContext.Session.GetString("username") == null)
+        if (HttpContext.Session.GetString("user") == null)
         {
             TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda harus login terlebih dahulu !</div>";
             return RedirectToAction("Login", "Users");
@@ -57,7 +58,28 @@ public class CategoriesController : Controller
         //ViewData["action"] = action;
 
 
-        return View(models);
+        var userDto = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
+        ViewBag.Message = $"{userDto.FirstName} {userDto.LastName}";
+        var userRoles = userDto.Roles;
+        var access = 0;
+        foreach (var role in userRoles)
+        {
+            if (role.RoleID == 3)
+            {
+                access = 1;
+            }
+        }
+        if (access == 1)
+        {
+            return View(models);
+        }
+        else
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        //return View(models);
     }
 
 
@@ -69,7 +91,25 @@ public class CategoriesController : Controller
 
     public IActionResult Create()
     {
-        return View();
+        var userDto = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
+        ViewBag.Message = $"{userDto.FirstName} {userDto.LastName}";
+        var userRoles = userDto.Roles;
+        var access = 0;
+        foreach(var role in userRoles)
+        {
+            if (role.RoleID == 2)
+            {
+                access = 1;
+            }
+        }
+        if (access == 1)
+        {
+            return View();
+        }
+        else 
+        {
+            return RedirectToAction("Index", "Home");
+        }
     }
 
     [HttpPost]

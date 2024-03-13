@@ -1,10 +1,14 @@
-﻿@model IEnumerable<MyWebFormApp.BLL.DTOs.CategoryDTO>
+﻿@using System.Text.Json
+@model IEnumerable<MyWebFormApp.BLL.DTOs.CategoryDTO>
 @{
     int pageNumber = 0;
     if(ViewData["pageNumber"] != null)
     {
         pageNumber = Convert.ToInt32(ViewData["pageNumber"]);
     }
+    var userDto = JsonSerializer.Deserialize<UserDTO>(Context.Session.GetString("user"));
+    ViewBag.Message = $"{userDto.FirstName} {userDto.LastName}";
+    var userRoles = userDto.Roles;
 }
 
 <div class="row">
@@ -43,9 +47,25 @@
                         <tr>
                             <td>@category.CategoryID</td>
                             <td>@category.CategoryName</td>
-                            <td><a asp-action="Edit" asp-route-id="@category.CategoryID" class="btn btn-warning btn-sm">edit</a></td>
+
+
                             <td>
-                                <a asp-action="Delete" asp-route-id="@category.CategoryID" class="btn btn-danger btn-sm">delete</a>
+                                @foreach (var role in userRoles)
+                                {
+                                    @if (role.RoleID == 2)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@category.CategoryID" class="btn btn-warning btn-sm">edit</a>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @foreach (var role in userRoles)
+                                {
+                                    @if (role.RoleID == 2)
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@category.CategoryID" class="btn btn-danger btn-sm">delete</a>
+                                    }
+                                }
                             </td>
                         </tr>
                     }
